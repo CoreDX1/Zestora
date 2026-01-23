@@ -29,7 +29,7 @@ public class BaseRepositoryAsync<T> : IBaseRepositoryAsync<T>
         _dbSet.Remove(entity);
     }
 
-    public async Task<T?> FirstOrDefaultAsync(ISpecification<T> spec)
+    public async Task<T?> FirstOrDefaultAsync(ISpecification<T?> spec)
     {
         return await ApplySpecification(spec).FirstOrDefaultAsync();
     }
