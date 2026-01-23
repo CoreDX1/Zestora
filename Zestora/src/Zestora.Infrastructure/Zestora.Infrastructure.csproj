@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <ProjectReference Include="..\Zestora.Application\Zestora.Application.csproj" />
     <ProjectReference Include="..\Zestora.Domain\Zestora.Domain.csproj" />
@@ -18,5 +17,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
 </Project>

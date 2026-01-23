@@ -1,19 +1,37 @@
+using Microsoft.EntityFrameworkCore;
 using Zestora.Domain.Core.Models;
 using Zestora.Domain.Core.Repositories;
+using Zestora.Domain.Core.Specifications;
+using Zestora.Infrastructure.Data;
 
 namespace Zestora.Infrastructure.Repositories;
 
 public class BaseRepositoryAsync<T> : IBaseRepositoryAsync<T>
     where T : BaseEntity
 {
-    public Task<T> AddAsync(T entity)
+    private readonly PostgresContext _dbContext;
+    private readonly DbSet<T> _dbSet;
+
+    public BaseRepositoryAsync(PostgresContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
+        _dbSet = _dbContext.Set<T>();
+    }
+
+    public async Task<T> AddAsync(T entity)
+    {
+        await _dbSet.AddAsync(entity);
+        return entity;
     }
 
     public void Delete(T entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Remove(entity);
+    }
+
+    public async Task<T?> FirstOrDefaultAsync(ISpecification<T> spec)
+    {
+        return await ApplySpecification(spec).FirstOrDefaultAsync();
     }
 
     public Task<T> GetByIdAsync(Guid id)
@@ -21,13 +39,18 @@ public class BaseRepositoryAsync<T> : IBaseRepositoryAsync<T>
         throw new NotImplementedException();
     }
 
-    public Task<IList<T>> ListAllAsync()
+    public async Task<IList<T>> ListAllAsync()
     {
-        throw new NotImplementedException();
+        return await _dbSet.ToListAsync();
     }
 
     public void Update(T entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Update(entity);
+    }
+
+    private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+    {
+        return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>().AsQueryable(), spec);
     }
 }
