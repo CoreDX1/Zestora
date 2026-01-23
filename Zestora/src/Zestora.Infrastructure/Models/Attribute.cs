@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Zestora.Infrastructure.Models;
+﻿namespace Zestora.Infrastructure.Models;
 
 public partial class Attribute
 {
