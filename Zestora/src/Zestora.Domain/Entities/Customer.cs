@@ -1,6 +1,8 @@
-﻿namespace Zestora.Domain.Entities;
+﻿using Zestora.Domain.Core.Models;
 
-public partial class Customer
+namespace Zestora.Domain.Entities;
+
+public partial class Customer : BaseEntity
 {
     public Guid Id { get; set; }
 
