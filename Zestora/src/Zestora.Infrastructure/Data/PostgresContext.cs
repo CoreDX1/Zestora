@@ -87,19 +87,220 @@ public partial class PostgresContext : DbContext
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
-        modelBuilder.Entity<Models.Attribute>(entity => { });
+        modelBuilder.Entity<Models.Attribute>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("attributes_pkey");
 
-        modelBuilder.Entity<AttributeValue>(entity => { });
+            entity.ToTable("attributes");
 
-        modelBuilder.Entity<Card>(entity => { });
+            entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()").HasColumnName("id");
+            entity.Property(e => e.AttributeName).HasMaxLength(255).HasColumnName("attribute_name");
+            entity
+                .Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity
+                .Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
 
-        modelBuilder.Entity<CardItem>(entity => { });
+            entity
+                .HasOne(d => d.CreatedByNavigation)
+                .WithMany(p => p.AttributeCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("attributes_created_by_fkey");
 
-        modelBuilder.Entity<Category>(entity => { });
+            entity
+                .HasOne(d => d.UpdatedByNavigation)
+                .WithMany(p => p.AttributeUpdatedByNavigations)
+                .HasForeignKey(d => d.UpdatedBy)
+                .HasConstraintName("attributes_updated_by_fkey");
+        });
 
-        modelBuilder.Entity<Country>(entity => { });
+        modelBuilder.Entity<AttributeValue>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("attribute_values_pkey");
 
-        modelBuilder.Entity<Coupon>(entity => { });
+            entity.ToTable("attribute_values");
+
+            entity.HasIndex(e => e.AttributeId, "idx_attribute_values");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()").HasColumnName("id");
+            entity.Property(e => e.AttributeId).HasColumnName("attribute_id");
+            entity
+                .Property(e => e.AttributeValue1)
+                .HasMaxLength(255)
+                .HasColumnName("attribute_value");
+            entity
+                .Property(e => e.Color)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("NULL::character varying")
+                .HasColumnName("color");
+
+            entity
+                .HasOne(d => d.Attribute)
+                .WithMany(p => p.AttributeValues)
+                .HasForeignKey(d => d.AttributeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("attribute_values_attribute_id_fkey");
+        });
+
+        modelBuilder.Entity<Card>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("cards_pkey");
+
+            entity.ToTable("cards");
+
+            entity.HasIndex(e => e.CustomerId, "idx_customer_id_card");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()").HasColumnName("id");
+            entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+
+            entity
+                .HasOne(d => d.Customer)
+                .WithMany(p => p.Cards)
+                .HasForeignKey(d => d.CustomerId)
+                .HasConstraintName("cards_customer_id_fkey");
+        });
+
+        modelBuilder.Entity<CardItem>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("card_items_pkey");
+
+            entity.ToTable("card_items");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()").HasColumnName("id");
+            entity.Property(e => e.CardId).HasColumnName("card_id");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.Quantity).HasDefaultValue(1).HasColumnName("quantity");
+
+            entity
+                .HasOne(d => d.Card)
+                .WithMany(p => p.CardItems)
+                .HasForeignKey(d => d.CardId)
+                .HasConstraintName("card_items_card_id_fkey");
+
+            entity
+                .HasOne(d => d.Product)
+                .WithMany(p => p.CardItems)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("card_items_product_id_fkey");
+        });
+
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("categories_pkey");
+
+            entity.ToTable("categories");
+
+            entity.HasIndex(e => e.CategoryName, "categories_category_name_key").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()").HasColumnName("id");
+            entity.Property(e => e.Active).HasDefaultValue(true).HasColumnName("active");
+            entity.Property(e => e.CategoryDescription).HasColumnName("category_description");
+            entity.Property(e => e.CategoryName).HasMaxLength(255).HasColumnName("category_name");
+            entity
+                .Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.Icon).HasColumnName("icon");
+            entity.Property(e => e.Image).HasColumnName("image");
+            entity.Property(e => e.ParentId).HasColumnName("parent_id");
+            entity.Property(e => e.Placeholder).HasColumnName("placeholder");
+            entity
+                .Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
+
+            entity
+                .HasOne(d => d.CreatedByNavigation)
+                .WithMany(p => p.CategoryCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("categories_created_by_fkey");
+
+            entity
+                .HasOne(d => d.Parent)
+                .WithMany(p => p.InverseParent)
+                .HasForeignKey(d => d.ParentId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("categories_parent_id_fkey");
+
+            entity
+                .HasOne(d => d.UpdatedByNavigation)
+                .WithMany(p => p.CategoryUpdatedByNavigations)
+                .HasForeignKey(d => d.UpdatedBy)
+                .HasConstraintName("categories_updated_by_fkey");
+        });
+
+        modelBuilder.Entity<Country>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("countries_pkey");
+
+            entity.ToTable("countries");
+
+            entity
+                .Property(e => e.Id)
+                .HasDefaultValueSql("nextval('countries_seq'::regclass)")
+                .HasColumnName("id");
+            entity.Property(e => e.Iso).HasMaxLength(2).IsFixedLength().HasColumnName("iso");
+            entity
+                .Property(e => e.Iso3)
+                .HasMaxLength(3)
+                .HasDefaultValueSql("NULL::bpchar")
+                .IsFixedLength()
+                .HasColumnName("iso3");
+            entity.Property(e => e.Name).HasMaxLength(80).HasColumnName("name");
+            entity.Property(e => e.NumCode).HasColumnName("num_code");
+            entity.Property(e => e.PhoneCode).HasColumnName("phone_code");
+            entity.Property(e => e.UpperName).HasMaxLength(80).HasColumnName("upper_name");
+        });
+
+        modelBuilder.Entity<Coupon>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("coupons_pkey");
+
+            entity.ToTable("coupons");
+
+            entity.HasIndex(e => e.Code, "coupons_code_key").IsUnique();
+
+            entity.HasIndex(e => e.Code, "idx_code_coupons");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()").HasColumnName("id");
+            entity.Property(e => e.Code).HasMaxLength(50).HasColumnName("code");
+            entity.Property(e => e.CouponEndDate).HasColumnName("coupon_end_date");
+            entity.Property(e => e.CouponStartDate).HasColumnName("coupon_start_date");
+            entity
+                .Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.DiscountType).HasMaxLength(50).HasColumnName("discount_type");
+            entity.Property(e => e.DiscountValue).HasColumnName("discount_value");
+            entity.Property(e => e.MaxUsage).HasColumnName("max_usage");
+            entity.Property(e => e.OrderAmountLimit).HasColumnName("order_amount_limit");
+            entity.Property(e => e.TimesUsed).HasColumnName("times_used");
+            entity
+                .Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
+
+            entity
+                .HasOne(d => d.CreatedByNavigation)
+                .WithMany(p => p.CouponCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("coupons_created_by_fkey");
+
+            entity
+                .HasOne(d => d.UpdatedByNavigation)
+                .WithMany(p => p.CouponUpdatedByNavigations)
+                .HasForeignKey(d => d.UpdatedBy)
+                .HasConstraintName("coupons_updated_by_fkey");
+        });
 
         modelBuilder.Entity<Customer>(entity =>
         {
