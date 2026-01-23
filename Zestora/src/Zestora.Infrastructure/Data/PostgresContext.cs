@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Zestora.Infrastructure.Models;
+using Zestora.Domain.Entities;
 
 namespace Zestora.Infrastructure.Data;
 
@@ -10,7 +10,7 @@ public partial class PostgresContext : DbContext
     public PostgresContext(DbContextOptions<PostgresContext> options)
         : base(options) { }
 
-    public virtual DbSet<Models.Attribute> Attributes { get; set; }
+    public virtual DbSet<Domain.Entities.Attribute> Attributes { get; set; }
 
     public virtual DbSet<AttributeValue> AttributeValues { get; set; }
 
@@ -87,7 +87,7 @@ public partial class PostgresContext : DbContext
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
-        modelBuilder.Entity<Models.Attribute>(entity =>
+        modelBuilder.Entity<Domain.Entities.Attribute>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("attributes_pkey");
 
