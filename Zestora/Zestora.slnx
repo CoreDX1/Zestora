@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Zestora.API/Zestora.API.csproj" />
+    <Project Path="src/Zestora.Application/Zestora.Application.csproj" />
+    <Project Path="src/Zestora.Domain/Zestora.Domain.csproj" />
+    <Project Path="src/Zestora.Infrastructure/Zestora.Infrastructure.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,6 @@
+@Zestora.API_HostAddress = http://localhost:5018
+
+GET {{Zestora.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
