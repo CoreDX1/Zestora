@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="card">
+    <h1>Crear Cuenta</h1>
+    <p>Únete hoy</p>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="name">Nombre</label>
+        <input type="text" id="name" [(ngModel)]="name" name="name" placeholder="Juan Pérez" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="tu@email.com" required />
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" placeholder="••••••••" required />
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirmar Contraseña</label>
+        <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="••••••••" required />
+      </div>
+
+      <button type="submit">Crear Cuenta</button>
+    </form>
+
+    <p class="footer">¿Ya tienes cuenta? <a (click)="goToLogin()">Inicia Sesión</a></p>
+  </div>
+</div>
