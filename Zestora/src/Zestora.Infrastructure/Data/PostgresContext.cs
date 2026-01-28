@@ -78,10 +78,8 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<VariantValue> VariantValues { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-        optionsBuilder.UseNpgsql(
-            "Host=localhost:5433;Database=postgres;Username=crud_user;Password=crud_password"
-        );
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+    //     optionsBuilder.UseNpgsql("");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

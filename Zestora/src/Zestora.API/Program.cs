@@ -2,15 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using Zestora.Application.Interfaces;
 using Zestora.Application.Services;
 using Zestora.Domain.Core.Repositories;
+using Zestora.Infrastructure;
 using Zestora.Infrastructure.Data;
 using Zestora.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<PostgresContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+// builder.Services.AddDbContext<PostgresContext>(options =>
+//     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+// );
+builder.Services.ConfigureInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();

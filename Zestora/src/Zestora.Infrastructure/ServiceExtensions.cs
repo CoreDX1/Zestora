@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Zestora.Domain.Core.Repositories;
 using Zestora.Infrastructure.Data;
@@ -8,12 +9,15 @@ namespace Zestora.Infrastructure
 {
     public static class ServiceExtensions
     {
-        public static void ConfigureInfrastructure(this IServiceCollection services)
+        public static void ConfigureInfrastructure(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
         {
             services.AddDbContext<PostgresContext>(options =>
                 options.UseNpgsql(
-                    "name=ConnectionStrings:MyAppDatabase",
-                    x => x.MigrationsAssembly("MyApp.Infrastructure")
+                    configuration.GetConnectionString("DefaultConnection"),
+                    x => x.MigrationsAssembly("Zestora.Infrastructure")
                 )
             );
 
