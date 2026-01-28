@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ROUTES } from '../../../core/routes.constants';
 
 @Component({
   selector: 'app-register',
@@ -8,10 +9,10 @@ import { Router } from '@angular/router';
   standalone: false
 })
 export class RegisterComponent {
-  name: string = '';
-  email: string = '';
-  password: string = '';
-  confirmPassword: string = '';
+  public name: string = '';
+  public email: string = '';
+  public password: string = '';
+  public confirmPassword: string = '';
 
   constructor(private router: Router) {}
 
@@ -26,6 +27,6 @@ export class RegisterComponent {
   }
 
   goToLogin() {
-    this.router.navigate(['/auth/login']);
+    this.router.navigate([ROUTES.AUTH.LOGIN]);
   }
 }
