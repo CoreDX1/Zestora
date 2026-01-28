@@ -10,7 +10,7 @@ public class BaseRepositoryAsync<T> : IBaseRepositoryAsync<T>
     where T : BaseEntity
 {
     private readonly PostgresContext _dbContext;
-    private readonly DbSet<T> _dbSet;
+    protected readonly DbSet<T> _dbSet;
 
     public BaseRepositoryAsync(PostgresContext dbContext)
     {

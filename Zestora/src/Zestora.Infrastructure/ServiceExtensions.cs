@@ -24,7 +24,7 @@ public static class ServiceExtensions
         services.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(BaseRepositoryAsync<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        // services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
         // services.AddScoped<ILoggerService, LoggerService>();
 
         return services;

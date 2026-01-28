@@ -2,6 +2,7 @@ using Zestora.Application.Interfaces;
 using Zestora.Application.Models.DTOs;
 using Zestora.Application.Models.Requests;
 using Zestora.Application.Models.Responses;
+using Zestora.Domain.Builders;
 using Zestora.Domain.Core.Repositories;
 using Zestora.Domain.Entities;
 
@@ -10,29 +11,25 @@ namespace Zestora.Application.Services;
 public class UserService : IUserService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public UserService(IUnitOfWork unitOfWork)
+    public UserService(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
     {
         _unitOfWork = unitOfWork;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<CreateUserRes> CreateUser(CreateUserReq req)
     {
-        var customerRepo = _unitOfWork.Repository<Customer>();
+        string passwordHash = _passwordHasher.Hash(req.Password);
 
-        var customer = new Customer
-        {
-            Id = Guid.NewGuid(),
-            FirstName = req.FirstName,
-            LastName = req.LastName,
-            Email = req.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password),
-            Active = true,
-            RegisteredAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-        };
+        Customer customer = new CustomerBuilder()
+            .WithPersonalData(req.FirstName, req.LastName)
+            .WithCredentials(req.Email, passwordHash)
+            .AsActive()
+            .Build();
 
-        await customerRepo.AddAsync(customer);
+        await _unitOfWork.Customer.AddAsync(customer);
         await _unitOfWork.SaveChangesAsync();
 
         return new CreateUserRes { Data = new CustomerDTO(customer) };
@@ -40,12 +37,9 @@ public class UserService : IUserService
 
     public async Task<ValidateUserRes> ValidateUser(ValidateUserReq req)
     {
-        var customerRepo = _unitOfWork.Repository<Customer>();
-        var customers = await customerRepo.ListAllAsync();
+        Customer customer = await _unitOfWork.Customer.GetCustomerByEmail(req.Email);
 
-        var customer = customers.FirstOrDefault(c => c.Email == req.Email && c.Active == true);
-
-        if (customer == null || !BCrypt.Net.BCrypt.Verify(req.Password, customer.PasswordHash))
+        if (customer == null || !_passwordHasher.Verify(req.Password, customer.PasswordHash))
         {
             return new ValidateUserRes { IsValid = false };
         }
@@ -60,13 +54,8 @@ public class UserService : IUserService
 
     public async Task<GetAllActiveUsersRes> GetAllActiveUsers()
     {
-        var customerRepo = _unitOfWork.Repository<Customer>();
-        var customers = await customerRepo.ListAllAsync();
-
-        var activeUsers = customers
-            .Where(c => c.Active == true)
-            .Select(c => new CustomerDTO(c))
-            .ToList();
+        IEnumerable<Customer> customer = await _unitOfWork.Customer.GetAllActiveCustomers();
+        IEnumerable<CustomerDTO> activeUsers = customer.Select(c => new CustomerDTO(c));
 
         return new GetAllActiveUsersRes { Users = activeUsers };
     }

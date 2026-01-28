@@ -20,10 +20,11 @@ public partial class Customer : BaseEntity
 
     public DateTime UpdatedAt { get; set; }
 
-    public virtual ICollection<Card> Cards { get; set; } = new List<Card>();
+    public virtual ICollection<Card> Cards { get; set; } = [];
 
-    public virtual ICollection<CustomerAddress> CustomerAddresses { get; set; } =
-        new List<CustomerAddress>();
+    public virtual ICollection<CustomerAddress> CustomerAddresses { get; set; } = [];
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<Order> Orders { get; set; } = [];
+
+    internal Customer() { }
 }

@@ -9,11 +9,16 @@ public class UnitOfWork : IUnitOfWork
     protected readonly PostgresContext _dbContext;
     private readonly IDictionary<Type, dynamic> _repositories;
 
+    private ICustomerRepository? _customerRepository;
+
     public UnitOfWork(PostgresContext dbContext)
     {
         _dbContext = dbContext;
         _repositories = new Dictionary<Type, dynamic>();
     }
+
+    public ICustomerRepository Customer =>
+        _customerRepository ??= new CustomerRepository(_dbContext);
 
     public IBaseRepositoryAsync<T> Repository<T>()
         where T : BaseEntity
