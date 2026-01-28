@@ -4,5 +4,5 @@ namespace Zestora.Application.Models.Responses;
 
 public class CreateUserRes
 {
-    public CustomerDTO Data { get; set; }
+    public required CustomerDTO Data { get; set; }
 }

@@ -5,39 +5,40 @@ using Zestora.Domain.Core.Repositories;
 using Zestora.Infrastructure.Data;
 using Zestora.Infrastructure.Repositories;
 
-namespace Zestora.Infrastructure
+namespace Zestora.Infrastructure;
+
+public static class ServiceExtensions
 {
-    public static class ServiceExtensions
+    public static IServiceCollection ConfigureInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
-        public static void ConfigureInfrastructure(
-            this IServiceCollection services,
-            IConfiguration configuration
-        )
+        services.AddDbContext<PostgresContext>(options =>
+            options.UseNpgsql(
+                configuration.GetConnectionString("DefaultConnection"),
+                x => x.MigrationsAssembly("Zestora.Infrastructure")
+            )
+        );
+
+        services.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(BaseRepositoryAsync<>));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // services.AddScoped<IEmailService, EmailService>();
+        // services.AddScoped<ILoggerService, LoggerService>();
+
+        return services;
+    }
+
+    public static void MigrateDatabase(this IServiceProvider serviceProvider)
+    {
+        var dbContextOptions = serviceProvider.GetRequiredService<
+            DbContextOptions<PostgresContext>
+        >();
+
+        using (var dbContext = new PostgresContext(dbContextOptions))
         {
-            services.AddDbContext<PostgresContext>(options =>
-                options.UseNpgsql(
-                    configuration.GetConnectionString("DefaultConnection"),
-                    x => x.MigrationsAssembly("Zestora.Infrastructure")
-                )
-            );
-
-            services.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(BaseRepositoryAsync<>));
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            // services.AddScoped<IEmailService, EmailService>();
-            // services.AddScoped<ILoggerService, LoggerService>();
-        }
-
-        public static void MigrateDatabase(this IServiceProvider serviceProvider)
-        {
-            var dbContextOptions = serviceProvider.GetRequiredService<
-                DbContextOptions<PostgresContext>
-            >();
-
-            using (var dbContext = new PostgresContext(dbContextOptions))
-            {
-                dbContext.Database.Migrate();
-            }
+            dbContext.Database.Migrate();
         }
     }
 }
