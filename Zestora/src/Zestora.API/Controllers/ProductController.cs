@@ -19,7 +19,13 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateProductRequest request)
     {
         var response = await _productService.CreateAsync(request);
-        return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
+
+        if (response.Error != null)
+        {
+            return BadRequest(response.Error);
+        }
+
+        return Ok(response.Value);
     }
 
     [HttpPost("bulk")]
@@ -33,15 +39,24 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> GetById(Guid id)
     {
         var response = await _productService.GetByIdAsync(id);
-        if (response == null)
-            return NotFound();
-        return Ok(response);
+
+        if (response.Error != null)
+        {
+            return BadRequest(response.Error);
+        }
+
+        return Ok(response.Value);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var response = await _productService.GetAllAsync();
+        if (response.Error != null)
+        {
+            return BadRequest(response.Error);
+        }
+
         return Ok(response);
     }
 }

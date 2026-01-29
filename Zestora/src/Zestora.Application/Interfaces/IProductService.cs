@@ -1,12 +1,13 @@
 using Zestora.Application.Models.Requests;
 using Zestora.Application.Models.Responses;
+using Zestora.Domain.Core.Models;
 
 namespace Zestora.Application.Interfaces;
 
 public interface IProductService
 {
-    Task<CreateProductResponse> CreateAsync(CreateProductRequest request);
+    Task<Result<CreateProductResponse>> CreateAsync(CreateProductRequest request);
     Task<IEnumerable<CreateProductResponse>> CreateBulkAsync(CreateBulkProductsRequest request);
-    Task<ProductResponse?> GetByIdAsync(Guid id);
-    Task<IEnumerable<ProductResponse>> GetAllAsync();
+    Task<Result<ProductResponse?>> GetByIdAsync(Guid id);
+    public Task<Result<List<ProductResponse>>> GetAllAsync();
 }

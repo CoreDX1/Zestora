@@ -9,6 +9,8 @@ public static class ServiceExtensions
 {
     public static IServiceCollection ConfigureApplication(this IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(ServiceExtensions).Assembly);
+
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProductService, ProductService>();

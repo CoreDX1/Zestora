@@ -1,23 +1,26 @@
 using System.Text.RegularExpressions;
+using AutoMapper;
 using Zestora.Application.Interfaces;
 using Zestora.Application.Models.Requests;
 using Zestora.Application.Models.Responses;
 using Zestora.Domain.Builders;
+using Zestora.Domain.Core.Models;
 using Zestora.Domain.Core.Repositories;
-using Zestora.Domain.Entities;
 
 namespace Zestora.Application.Services;
 
 public class ProductService : IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public ProductService(IUnitOfWork unitOfWork)
+    public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
-    public async Task<CreateProductResponse> CreateAsync(CreateProductRequest request)
+    public async Task<Result<CreateProductResponse>> CreateAsync(CreateProductRequest request)
     {
         var slug = await GenerateUniqueSlugAsync(request.ProductName);
 
@@ -38,17 +41,7 @@ public class ProductService : IProductService
         await _unitOfWork.Product.AddAsync(product);
         await _unitOfWork.SaveChangesAsync();
 
-        return new CreateProductResponse(
-            product.Id,
-            product.Slug,
-            product.ProductName,
-            product.Sku,
-            product.SalePrice,
-            product.ComparePrice,
-            product.Quantity,
-            product.Published,
-            product.CreatedAt
-        );
+        return _mapper.Map<CreateProductResponse>(product);
     }
 
     public async Task<IEnumerable<CreateProductResponse>> CreateBulkAsync(
@@ -100,49 +93,21 @@ public class ProductService : IProductService
         return responses;
     }
 
-    public async Task<ProductResponse?> GetByIdAsync(Guid id)
+    public async Task<Result<ProductResponse?>> GetByIdAsync(Guid id)
     {
         var product = await _unitOfWork.Product.GetByIdAsync(id);
 
         if (product == null)
-            return null;
+            return Errors.ProductNotFound;
 
-        return new ProductResponse(
-            product.Id,
-            product.Slug,
-            product.ProductName,
-            product.Sku,
-            product.SalePrice,
-            product.ComparePrice,
-            product.BuyingPrice,
-            product.Quantity,
-            product.ShortDescription,
-            product.ProductDescription,
-            product.ProductType,
-            product.Published,
-            product.CreatedAt
-        );
+        return _mapper.Map<ProductResponse>(product);
     }
 
-    public async Task<IEnumerable<ProductResponse>> GetAllAsync()
+    public async Task<Result<List<ProductResponse>>> GetAllAsync()
     {
         var products = await _unitOfWork.Product.ListAllAsync();
 
-        return products.Select(p => new ProductResponse(
-            p.Id,
-            p.Slug,
-            p.ProductName,
-            p.Sku,
-            p.SalePrice,
-            p.ComparePrice,
-            p.BuyingPrice,
-            p.Quantity,
-            p.ShortDescription,
-            p.ProductDescription,
-            p.ProductType,
-            p.Published,
-            p.CreatedAt
-        ));
+        return _mapper.Map<List<ProductResponse>>(products);
     }
 
     private async Task<string> GenerateUniqueSlugAsync(string productName)

@@ -1,6 +1,75 @@
-@Zestora.API_HostAddress = http://localhost:5018
+@Zestora_API_HostAddress = http://localhost:5018
 
-GET {{Zestora.API_HostAddress}}/weatherforecast/
+GET {{Zestora_API_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+# Product Endpoints
+
+### Get All Products
+GET {{Zestora_API_HostAddress}}/api/product
+Accept: application/json
+
+###
+
+### Get Product By Id
+GET {{Zestora_API_HostAddress}}/api/product/3fa85f64-5717-4562-b3fc-2c963f66afa6
+Accept: application/json
+
+###
+
+### Create Product
+POST {{Zestora_API_HostAddress}}/api/product
+Content-Type: application/json
+
+{
+  "productName": "ASRock B650M Pro RS WiFi",
+  "salePrice": 159.99,
+  "quantity": 25,
+  "shortDescription": "Placa base AMD B650 con WiFi 6E",
+  "productDescription": "Placa base ASRock B650M Pro RS WiFi, socket AM5 para procesadores AMD Ryzen 7000, DDR5, PCIe 4.0, WiFi 6E, formato Micro-ATX",
+  "productType": "simple",
+  "sku": "ASROCK-B650M-WIFI",
+  "comparePrice": 189.99,
+  "buyingPrice": 120.00,
+  "published": true
+}
+
+
+###
+
+### Create Bulk Products
+POST {{Zestora_API_HostAddress}}/api/product/bulk
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "productName": "MacBook Pro 14",
+      "salePrice": 1999.99,
+      "quantity": 30,
+      "shortDescription": "MacBook Pro con chip M3 Pro",
+      "productDescription": "MacBook Pro de 14 pulgadas con chip M3 Pro, 18GB RAM, 512GB SSD",
+      "productType": "Simple",
+      "sku": "MBP-14-M3",
+      "comparePrice": 2199.99,
+      "buyingPrice": 1600.00,
+      "published": true
+    },
+    {
+      "productName": "AirPods Pro 2",
+      "salePrice": 249.99,
+      "quantity": 100,
+      "shortDescription": "AirPods Pro con cancelación de ruido",
+      "productDescription": "AirPods Pro de segunda generación con cancelación activa de ruido y audio espacial",
+      "productType": "Simple",
+      "sku": "AIRPODS-PRO-2",
+      "comparePrice": 279.99,
+      "buyingPrice": 180.00,
+      "published": true
+    }
+  ]
+}
 
 ###
