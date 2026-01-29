@@ -10,6 +10,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IDictionary<Type, dynamic> _repositories;
 
     private ICustomerRepository? _customerRepository;
+    private IProductRepository? _productRepository;
 
     public UnitOfWork(PostgresContext dbContext)
     {
@@ -19,6 +20,9 @@ public class UnitOfWork : IUnitOfWork
 
     public ICustomerRepository Customer =>
         _customerRepository ??= new CustomerRepository(_dbContext);
+
+    public IProductRepository Product =>
+        _productRepository ??= new ProductRepository(_dbContext);
 
     public IBaseRepositoryAsync<T> Repository<T>()
         where T : BaseEntity

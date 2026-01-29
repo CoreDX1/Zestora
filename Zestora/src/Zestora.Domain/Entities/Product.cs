@@ -1,6 +1,8 @@
-﻿namespace Zestora.Domain.Entities;
+﻿using Zestora.Domain.Core.Models;
 
-public partial class Product
+namespace Zestora.Domain.Entities;
+
+public partial class Product : BaseEntity
 {
     public Guid Id { get; set; }
 
@@ -38,40 +40,35 @@ public partial class Product
 
     public Guid? UpdatedBy { get; set; }
 
-    public virtual ICollection<CardItem> CardItems { get; set; } = new List<CardItem>();
+    public virtual ICollection<CardItem> CardItems { get; set; } = [];
 
     public virtual StaffAccount? CreatedByNavigation { get; set; }
 
-    public virtual ICollection<GalleryPart1> GalleryPart1s { get; set; } = new List<GalleryPart1>();
+    public virtual ICollection<GalleryPart1> GalleryPart1s { get; set; } = [];
 
-    public virtual ICollection<GalleryPart2> GalleryPart2s { get; set; } = new List<GalleryPart2>();
+    public virtual ICollection<GalleryPart2> GalleryPart2s { get; set; } = [];
 
-    public virtual ICollection<GalleryPart3> GalleryPart3s { get; set; } = new List<GalleryPart3>();
+    public virtual ICollection<GalleryPart3> GalleryPart3s { get; set; } = [];
 
-    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
 
-    public virtual ICollection<ProductAttribute> ProductAttributes { get; set; } =
-        new List<ProductAttribute>();
+    public virtual ICollection<ProductAttribute> ProductAttributes { get; set; } = [];
 
-    public virtual ICollection<ProductCategory> ProductCategories { get; set; } =
-        new List<ProductCategory>();
+    public virtual ICollection<ProductCategory> ProductCategories { get; set; } = [];
 
-    public virtual ICollection<ProductCoupon> ProductCoupons { get; set; } =
-        new List<ProductCoupon>();
+    public virtual ICollection<ProductCoupon> ProductCoupons { get; set; } = [];
 
-    public virtual ICollection<ProductShippingInfo> ProductShippingInfos { get; set; } =
-        new List<ProductShippingInfo>();
+    public virtual ICollection<ProductShippingInfo> ProductShippingInfos { get; set; } = [];
 
     public virtual Sell? Sell { get; set; }
 
     public virtual StaffAccount? UpdatedByNavigation { get; set; }
 
-    public virtual ICollection<VariantOption> VariantOptions { get; set; } =
-        new List<VariantOption>();
+    public virtual ICollection<VariantOption> VariantOptions { get; set; } = [];
 
-    public virtual ICollection<Variant> Variants { get; set; } = new List<Variant>();
+    public virtual ICollection<Variant> Variants { get; set; } = [];
 
-    public virtual ICollection<Supplier> Suppliers { get; set; } = new List<Supplier>();
+    public virtual ICollection<Supplier> Suppliers { get; set; } = [];
 
-    public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
+    public virtual ICollection<Tag> Tags { get; set; } = [];
 }

@@ -7,7 +7,7 @@ public interface IBaseRepositoryAsync<T>
     where T : BaseEntity
 {
     Task<T> GetByIdAsync(Guid id);
-    Task<IList<T>> ListAllAsync();
+    Task<IEnumerable<T>> ListAllAsync();
     Task<T> AddAsync(T entity);
     Task<T?> FirstOrDefaultAsync(ISpecification<T?> spec);
     void Update(T entity);

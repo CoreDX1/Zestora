@@ -34,12 +34,12 @@ public class BaseRepositoryAsync<T> : IBaseRepositoryAsync<T>
         return await ApplySpecification(spec).FirstOrDefaultAsync();
     }
 
-    public Task<T> GetByIdAsync(Guid id)
+    public async Task<T> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FindAsync(id);
     }
 
-    public async Task<IList<T>> ListAllAsync()
+    public async Task<IEnumerable<T>> ListAllAsync()
     {
         return await _dbSet.ToListAsync();
     }
