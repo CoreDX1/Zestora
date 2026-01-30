@@ -1,5 +1,8 @@
 namespace Zestora.Application.Models.Requests;
 
+/// <summary>
+/// Request for creating a new product.
+/// </summary>
 public record CreateProductRequest(
     string ProductName,
     decimal SalePrice,

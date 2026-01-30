@@ -9,29 +9,35 @@ namespace Zestora.API.Controllers;
 [Route("api/[controller]/[action]")]
 public class CustomerController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly ICustomerService _userService;
 
-    public CustomerController(IUserService userService)
+    public CustomerController(ICustomerService userService)
     {
         _userService = userService;
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateUserRes>> CreateUser(CreateUserReq user)
+    public async Task<ActionResult<CreateUserResponse>> CreateUser(CreateUserRequest user)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var result = await _userService.CreateUser(user);
         return Ok(result);
     }
 
     [HttpPost]
-    public async Task<ActionResult<ValidateUserRes>> ValidateUser(ValidateUserReq req)
+    public async Task<ActionResult<ValidateUserResponse>> ValidateUser(ValidateUserRequest req)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var result = await _userService.ValidateUser(req);
         return Ok(result);
     }
 
     [HttpGet]
-    public async Task<ActionResult<GetAllActiveUsersRes>> GetAllActiveUsers()
+    public async Task<ActionResult<GetAllActiveUsersResponse>> GetAllActiveUsers()
     {
         var result = await _userService.GetAllActiveUsers();
         return Ok(result);

@@ -1,5 +1,8 @@
 namespace Zestora.Application.Models.Responses;
 
+/// <summary>
+/// Response containing product information.
+/// </summary>
 public record ProductResponse(
     Guid Id,
     string Slug,

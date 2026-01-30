@@ -3,6 +3,12 @@
 GET {{Zestora_API_HostAddress}}/weatherforecast/
 Accept: application/json
 
+# Customer Endpoints
+
+### Get customer
+GET {{Zestora_API_HostAddress}}/api/customer
+Accept: application/json
+
 ###
 
 # Product Endpoints
@@ -14,7 +20,7 @@ Accept: application/json
 ###
 
 ### Get Product By Id
-GET {{Zestora_API_HostAddress}}/api/product/3fa85f64-5717-4562-b3fc-2c963f66afa6
+GET {{Zestora_API_HostAddress}}/api/product/d59709a8-e151-4be1-948f-3d81a0f7058c
 Accept: application/json
 
 ###
@@ -24,15 +30,15 @@ POST {{Zestora_API_HostAddress}}/api/product
 Content-Type: application/json
 
 {
-  "productName": "ASRock B650M Pro RS WiFi",
-  "salePrice": 159.99,
-  "quantity": 25,
-  "shortDescription": "Placa base AMD B650 con WiFi 6E",
-  "productDescription": "Placa base ASRock B650M Pro RS WiFi, socket AM5 para procesadores AMD Ryzen 7000, DDR5, PCIe 4.0, WiFi 6E, formato Micro-ATX",
+  "productName": "MSI PRO B760M-A WIFI DDR4",
+  "salePrice": 149.99,
+  "quantity": 18,
+  "shortDescription": "Placa base Intel B760 con WiFi 6",
+  "productDescription": "Placa base MSI PRO B760M-A WIFI DDR4, socket LGA1700 para procesadores Intel Core de 12ª, 13ª y 14ª generación, DDR4, PCIe 4.0, WiFi 6, formato Micro-ATX",
   "productType": "simple",
-  "sku": "ASROCK-B650M-WIFI",
-  "comparePrice": 189.99,
-  "buyingPrice": 120.00,
+  "sku": "MSI-B760M-WIFI-DDR4",
+  "comparePrice": 169.99,
+  "buyingPrice": 110.00,
   "published": true
 }
 

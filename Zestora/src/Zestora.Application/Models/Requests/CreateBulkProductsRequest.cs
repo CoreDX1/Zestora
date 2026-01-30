@@ -1,5 +1,7 @@
 namespace Zestora.Application.Models.Requests;
 
-public record CreateBulkProductsRequest(
-    List<CreateProductRequest> Products
-);
+/// <summary>
+/// Request for creating multiple products in bulk.
+/// </summary>
+/// <param name="Products">The list of product creation requests.</param>
+public record CreateBulkProductsRequest(List<CreateProductRequest> Products);

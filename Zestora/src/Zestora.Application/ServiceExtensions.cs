@@ -12,7 +12,7 @@ public static class ServiceExtensions
         services.AddAutoMapper(typeof(ServiceExtensions).Assembly);
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IProductService, ProductService>();
         return services;
     }
